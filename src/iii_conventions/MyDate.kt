@@ -22,6 +22,18 @@ enum class TimeInterval {
     YEAR
 }
 
+operator fun MyDate.plus(interval: TimeInterval): MyDate {
+    return this.addTimeIntervals(interval, 1)
+}
+
+data class RepeatedTimeInterval(val interval: TimeInterval, val times: Int)
+
+operator fun TimeInterval.times(rhs: Int): RepeatedTimeInterval = RepeatedTimeInterval(this, rhs)
+
+operator fun MyDate.plus(repeatedInterval: RepeatedTimeInterval): MyDate {
+   return this.addTimeIntervals(repeatedInterval.interval, repeatedInterval.times)
+}
+
 class DateRange(val start: MyDate, val endInclusive: MyDate): Iterable<MyDate> {
     override fun iterator(): Iterator<MyDate> = object : Iterator<MyDate> {
         var current: MyDate = start
