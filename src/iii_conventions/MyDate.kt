@@ -1,5 +1,7 @@
 package iii_conventions
 
+import java.util.Calendar
+
 data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int): Comparable<MyDate> {
     override fun compareTo(other: MyDate): Int = when {
         this.year > other.year -> 1
@@ -20,6 +22,18 @@ enum class TimeInterval {
     YEAR
 }
 
-class DateRange(val start: MyDate, val endInclusive: MyDate) {
+class DateRange(val start: MyDate, val endInclusive: MyDate): Iterable<MyDate> {
+    override fun iterator(): Iterator<MyDate> = object : Iterator<MyDate> {
+        var current: MyDate = start
+
+        override fun hasNext(): Boolean = current <= endInclusive
+
+        override fun next(): MyDate {
+            val result = current
+            current = current.nextDay()
+            return result
+        }
+    }
+
     operator fun contains(d: MyDate) = d >= start && d <= endInclusive
 }
